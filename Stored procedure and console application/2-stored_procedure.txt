@@ -1,0 +1,191 @@
+
+01-Information of athlete for given gender and belonging country
+
+
+
+create or replace function olympic.athlete_info(gen varchar(20), con_abbrev varchar(20))
+returns setof  athlete as
+$$
+declare
+ath athlete%rowtype;
+begin
+
+for ath in  select * from  athlete 
+loop
+
+if ath.gender = gen and ath.country_abbrev = con_abbrev then
+return next ath;
+end if;
+end loop;
+return;
+end
+$$ language 'plpgsql';
+
+
+
+
+02- Give the information of result for a particular discipline and medal type.
+
+
+
+
+create or replace function olympic.result_info(type varchar(20),medal_type varchar(20))
+returns setof  result as
+$$
+declare
+res result%rowtype;
+begin
+
+for res in  select * from  result 
+loop
+if res.type = type and res.medal_type = medal_type then
+return next res;
+end if;
+end loop;
+return;
+end
+$$ language 'plpgsql';
+
+
+
+
+03-  List all the athlete who have played more than one discipline
+
+create or replace function olympic.iteration() returns setof athlete as
+$$
+declare 
+count int;
+ath athlete%rowtype;
+res result%rowtype;
+begin
+for ath in select * from athlete loop
+count := 0;
+for res in select * from result loop
+
+if ath.athlete_id = res.athlete_id then
+count := count + 1;
+end if;
+end loop;
+if count > 1 then
+return next ath;
+end if;
+end loop;
+return;
+end
+$$ LANGUAGE 'plpgsql';
+select * from iteration() ;
+
+
+
+
+04- For checking athlete id is valid or not
+
+
+create or replace function valid_athete_id(id int ) returns boolean as
+$$
+declare
+c int;
+begin
+select athlete_id into c  from athlete where athlete_id = id;
+
+if c = id then
+ return true;
+else
+return false;
+end if;
+end
+$$ language 'plpgsql';
+select valid_athete_id(201);
+
+
+
+05)-Checking if the olympic year and season are valid or not.
+
+
+create or replace function valid_olympic(yr int,seasn varchar ) returns boolean as
+$$
+declare
+c int;
+begin
+select count(year) into c  from olympic where year =yr and season=seasn;
+
+if c = 1 then
+ return true;
+else
+return false;
+end if;
+end
+$$ language 'plpgsql';
+
+
+
+
+06) Checking if the discipline exist or not.
+
+
+create or replace function valid_discipline(dname varchar,ty varchar, ki varchar ) returns boolean as
+$$
+declare
+c int;
+begin
+select count(discipline) into c  from discipline where discipline_name = dname and type =ty and kind = ki;
+
+if c = 1 then
+ return true;
+else
+return false;
+end if;
+end
+$$ language 'plpgsql';
+
+
+
+
+07) for valid insertion of result.
+
+CREATE OR REPLACE FUNCTION olympic.valid_insert(
+	id int,
+	yr int,
+	sn  varchar,
+	ds varchar,
+	ty varchar,
+	k varchar,
+	md varchar)
+    RETURNS boolean
+ as $$
+
+declare
+flag1 boolean;
+flag2 boolean;
+flag3 boolean;
+begin
+flag1=valid_athete_id(id);
+flag2=valid_olympic(yr,sn);
+flag3=valid_discipline(ds ,ty,k);
+
+if flag1 = true and flag2 = true and flag3 = true then
+insert into result values(id,yr,sn,ds,ty,k,md);
+return true;
+else
+return false;
+end if;
+
+end
+$$ language 'plpgsql';
+
+
+
+08) total medal of each country
+
+CREATE OR REPLACE FUNCTION medals(c_name text) RETURNS INTEGER AS
+$$
+DECLARE
+a1 int;
+BEGIN
+SELECT count(medal_type) into a1 FROM athlete NATURAL JOIN country NATURAL JOIN result WHERE country.country_name = c_name;
+RETURN a1;
+END;
+$$ LANGUAGE PLPGSQL;
+
+
+

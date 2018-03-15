@@ -1,0 +1,209 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+EXEC SQL BEGIN DECLARE SECTION;
+int c;
+char ab[50],ac[50],ad[50],ae[40],af[30],ab1[50],ac1[20],fn[50],ln[50],gn[2],cn[20],fn1[50],ln1[50],cn1[20],sn[20],cn2[50],cn3[50],cn4[50],cn5[50],cn6[50],
+cnt[50];
+
+int temp;
+						
+int a,a1,a2,sp,sp1,c1,ts,g,s,d,c2,g1,s1,b1,g2,s2,b2,t,res;
+char cname[3],mtype[10],query[1000];
+EXEC SQL END DECLARE SECTION;
+
+void executeupdate()
+{
+	printf("ENTER QUERY : ");
+	char tc;
+	scanf("%c",&tc);
+	fgets (query, 1000, stdin);
+	EXEC SQL PREPARE query_prep FROM :query;
+	EXEC SQL EXECUTE query_prep;
+	EXEC SQL COMMIT;
+	printf("QUERY EXECUTED\n");
+	 
+}
+void executequery()
+{
+	int choice;
+	printf("\n\n\t\tCHOOSE ANY ONE OF THE QUERY :\n\n");
+	printf("\t\t1. LIST THE ATHLETES WHO HAVE WON ANY MEDAL IN WRESTLING.\n\n");
+	printf("\t\t2. LIST THE INDIVIDUAL MEDALS WON BY EACH COUNTRY.\n\n");
+	printf("\t\t3. LIST THE FEMALE ATHLETE DETAILS OF INDIA WHO WON MEDALS.\n\n");
+	printf("\t\t4. LIST THE ATHLETE WHO HAVE PARTICIPATED IN WINTER AND WIN MEDAL IN MORE THEN 1 DISCIPLINE.\n\n");
+	printf("\t\t5. LIST ALL THE COUNTRY WHOSE ATHLETE PARTICIPATED IN MORE THAN 4 SPORTS.\n\n");
+	printf("\t\t6. LIST THE COUNTRY WHOSE MAXIMUM DIFFERENCE B/W GOLD AND SILVER MEDALS IS GREATER THAN OR EQUAL TO 2.\n\n");
+	printf("\t\t7. LIST THOSE COUNTRIES WHOSE PERFORMANCE IS BELOW THAN AVERAGE.\n\n");
+	printf("\t\t8. LIST ALL THE COUNTRIES WHO HAVE MEDAL COUNT FOR ATLEAST EACH TYPE OF MEDALS.\n\n");
+	printf("\t\t9. TEAM OF THE 2016 WINTER OLYMPIC (HIGHEST NO. OF MEDAL).\n\n");
+	printf("\t\t10. ENTER COUNTRY NAME TO FIND NO. OF MEDALS\n");
+	printf("\n\t\tENTER CHOICE : ");
+	scanf("%d",&choice);
+	printf("\n________________________________________________________________________________________________________________________________________________\n");
+
+	switch(choice)
+	{
+		case 1 : strcpy(query,"select athlete_id,fname,lname,sport_name ,discipline_name,medal_type from result natural join discipline natural join sport natural join athlete where (sport_name='Wrestling')");
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur;
+				printf("ath_id\tfname\t     lname   sport_name\t     disc_name              medal\n");
+				while (sqlca.sqlcode==0) 
+				{
+					EXEC SQL FETCH emp_cur INTO :a , :ab , :ac ,:ad, :ae , :af;
+					printf("%3d %10s %10s %10s %25s %10s\n",a,ab,ac,ad,ae,af);
+		
+				}
+				break;
+		case 2 : strcpy(query,"select country_name,type,count(medal_type) as medals  from result natural join athlete natural join country where (type='Individual') group by type,country_name order by medals");
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur1 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur1;
+				printf("\t  country\t\t   type\t    medals\n");
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur1 INTO  :ab1 , :ac1 ,:a1 ;
+					printf("%20s %20s %5d \n",ab1,ac1,a1);
+		
+				}
+				break;
+		case 3: strcpy(query,"select * from athlete where (gender ='F' and country_abbrev ='IND')");
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur2 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur2;
+				
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur2 INTO  :a2 , :fn ,:ln ,:gn ,:cn,:sp;
+					printf("%2d %10s %10s %10s %4s %5d \n",a2,fn,ln,gn,cn,sp);
+		
+				}
+
+				break;
+		case 4: strcpy(query," select distinct fname,lname ,count ,sport_id ,country_abbrev from (( select fname,lname,count(fname) as count from athlete natural join result  group by fname,lname) as r1 natural join (select * from athlete natural join result ) as r2) where  count>1 order by count desc ");
+
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur3 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur3;
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur3 INTO  :fn1, :ln1 , :c1, :sp1 , :cn1, :sn;
+					printf("%10s %10s %5d %5d %10s %10s\n",fn1,ln1,c1,sp1,cn1,sn);
+		
+				}
+				break;
+				case 5: strcpy(query,"select country_name,Total_sports from (select country_name,count(sport_id) as Total_sports from athlete natural join country natural join sport group by country_name)as r where Total_sports>4");
+
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur4 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur4;
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur4 INTO  :cn2,:ts;
+					printf("%10s %5d\n",cn2,ts);
+		
+				}
+				break;
+
+				case 6: strcpy(query,"select distinct r1.country_abbrev,gold,silver,abs(gold-silver) as difference from( (select 		athlete.country_abbrev,medal_type,count(medal_type) as gold from athlete natural join result natural join discipline natural join sport group by country_abbrev,medal_type having( medal_type='Gold')) as r1 join (select athlete.country_abbrev,medal_type,count(medal_type) as silver from athlete natural join result natural join discipline natural join sport group by country_abbrev,medal_type having( medal_type='Silver')) as r2 on (r1.country_abbrev=r2.country_abbrev) ) where abs(gold-silver) >=2 order by abs(gold-silver) desc");
+			
+			EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur5 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur5;
+				printf("country\tgold\tsilver\tdifference\n");
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur5 INTO  :cn3,:g,:s,:d;
+
+					printf("%5s %5d %8d %5d\n",cn3,g,s,d);
+		
+				}
+				break;
+
+				case 7: strcpy(query," select country_abbrev, c as count from ( (select country_abbrev, c from ( select country_abbrev,count(medal_type) as c from athlete natural join result group by country_abbrev) as r1 ) as r3 join ( select avg(c) as c2 from ( select country_abbrev,count(medal_type) as c from athlete natural join result group by country_abbrev) as r2 ) as r4 on (r3.c<=r4.c2) ) order by c asc");
+
+					EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur6 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur6;
+				printf("country\tcount\n");
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur6 INTO  :cn4,:c2;
+
+					printf("%5s %5d \n",cn4,c2);
+		
+				}
+				break;
+
+				case 8:strcpy(query,"select country_name,gold,Silver,Bronze from ((select country_name,count(medal_type) as gold from (select * from athlete natural join result natural join country) as r where medal_type='Gold' group by r.country_name ) as a1 natural join ( select country_name,count(medal_type) as Silver from (select * from athlete natural join result natural join country) as r1 where medal_type='Silver' group by r1.country_name ) as a2 natural join (select country_name,count(medal_type) as Bronze from (select * from athlete natural join result natural join country)as r2 where medal_type='Bronze'group by r2.country_name ) as a3 ) ") ;
+
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur7 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur7;
+				printf("    country   gold silver bronze\n");
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur7 INTO  :cn5,:g1,:s1,:b1;
+
+					printf("%10s %5d %5d %5d \n",cn5,g1,s1,b1);
+		
+				}
+				break;
+
+				case 9: strcpy(query," select country_name,gold,Silver,Bronze ,( gold+Silver+Bronze ) as total from ( (select country_name,count(medal_type) as gold from (select * from athlete natural join result natural join country)as r where medal_type='Gold' and season='Winter' group by r.country_name ) as a1 natural join (select country_name,count(medal_type) as Silver from (select * from athlete natural join result natural join country)as r1 where medal_type='Silver' and season='Winter' group by r1.country_name )  as a2 natural join (select country_name,count(medal_type) as Bronze from (select  * from athlete natural  join result natural join country)as r2 where medal_type='Bronze' and season='Winter' group by r2.country_name )as a3 ) order by total desc limit 1 ");
+
+				EXEC SQL PREPARE query_prep FROM :query;
+				EXEC SQL DECLARE emp_cur8 CURSOR FOR query_prep;
+				EXEC SQL OPEN emp_cur8;
+				//printf("country\tcount\n");
+				while (sqlca.sqlcode==0) {
+					EXEC SQL FETCH emp_cur8 INTO  :cn6,:g2,:s2,:b2,:t;
+
+					printf("%5s %5d %5d %5d %5d \n",cn6,g2,s2,b2,t);
+		
+				}
+				break;
+
+				case 10:
+					printf("Enter country name:");
+					scanf("%s",&cnt);
+				
+
+						EXEC SQL SELECT medals INTO :temp FROM medals(:cnt);
+						//res=atoi(cnt);
+						
+						printf("\nNo of Medals won : %d\n",temp);
+						printf("\n");
+
+				
+						
+						break;
+
+
+				
+
+
+
+	}
+}
+int main()
+{
+	EXEC SQL CONNECT TO "201551096@10.100.1.62" USER "201551096" USING "201551096";
+	EXEC SQL set search_path to project;
+	printf("\n________________________________________________________________________________________________________________________________________________\n");
+	printf("\n\n\t\t\t\t\t\t\t\tTHE OLYMPIC DATABASE\n\n");
+	int check;
+	do{
+		printf("________________________________________________________________________________________________________________________________________________\n");		
+		printf("\n\n\t\tCHOOSE ANY ONE OF THE FOLLOWING:\n");
+		printf("\n\t\t1.EXECUTE QUERY\n\n\t\t2.EXECUTE UPDATE\n\n\t\t3.EXIT\n\n");
+		printf("\n\n\t\tENTER CHOICE: ");
+		scanf("%d",&check);
+		printf("\n________________________________________________________________________________________________________________________________________________\n");
+		switch(check)
+		{
+			case 1:	executequery();break;
+			case 2:
+					executeupdate();
+					break;
+			case 3:exit(0);break; 
+		}
+		
+	}
+	while(check!=3);
+} 

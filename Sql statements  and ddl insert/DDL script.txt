@@ -1,0 +1,759 @@
+set search_path to olympic;
+CREATE TABLE COUNTRY
+(
+  Country_Abbrev VARCHAR(20) NOT NULL,
+  Country_name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (Country_Abbrev)
+);
+
+CREATE TABLE OLYMPIC
+(
+  Year INT NOT NULL,
+  Season VARCHAR(20) NOT NULL,
+  Start_date DATE NOT NULL,
+  End_date DATE NOT NULL,
+  City VARCHAR(50) NOT NULL,
+  Country_Abbrev VARCHAR(20) NOT NULL,
+  PRIMARY KEY (Year, Season),
+  FOREIGN KEY (Country_Abbrev) REFERENCES COUNTRY(Country_Abbrev)
+);
+
+CREATE TABLE SPORT
+(
+  Sport_id INT NOT NULL,
+  Sport_name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (Sport_id)
+);
+
+CREATE TABLE consist_of
+(
+  Year INT NOT NULL,
+  Season VARCHAR(20) NOT NULL,
+  Sport_id INT NOT NULL,
+  PRIMARY KEY (Year, Season, Sport_id),
+  FOREIGN KEY (Year, Season) REFERENCES OLYMPIC(Year, Season),
+  FOREIGN KEY (Sport_id) REFERENCES SPORT(Sport_id)
+);
+
+CREATE TABLE ATHLETE
+(
+  Athlete_id INT NOT NULL,
+  Fname VARCHAR(50) NOT NULL,
+  Lname VARCHAR(50) NOT NULL,
+  Gender CHAR(2) NOT NULL,
+  Country_Abbrev VARCHAR(20) NOT NULL,
+  Sport_id INT NOT NULL,
+  PRIMARY KEY (Athlete_id),
+  FOREIGN KEY (Country_Abbrev) REFERENCES COUNTRY(Country_Abbrev),
+  FOREIGN KEY (Sport_id) REFERENCES SPORT(Sport_id)
+);
+
+CREATE TABLE DISCIPLINE
+(
+  Discipline_name VARCHAR(40) NOT NULL,
+  Type VARCHAR(20) NOT NULL,
+  Kind VARCHAR(20) NOT NULL,
+  Sport_id INT NOT NULL,
+  PRIMARY KEY (Discipline_name, Kind, Type),
+  FOREIGN KEY (Sport_id) REFERENCES SPORT(Sport_id)
+);
+
+CREATE TABLE RESULT
+(
+  
+  Athlete_id INT NOT NULL,
+  Year INT NOT NULL,
+  Season VARCHAR(20) NOT NULL,
+  Discipline_name VARCHAR(40) NOT NULL,
+  Type VARCHAR(20) NOT NULL,
+  Kind VARCHAR(20) NOT NULL,
+  Medal_type VARCHAR(30) NOT NULL,
+  PRIMARY KEY (Athlete_id, Year, Season, Discipline_name, Kind, Type),
+  FOREIGN KEY (Athlete_id) REFERENCES ATHLETE(Athlete_id),
+  FOREIGN KEY (Year, Season) REFERENCES OLYMPIC(Year, Season),
+  FOREIGN KEY (Discipline_name, Kind, Type) REFERENCES DISCIPLINE(Discipline_name, Kind, Type)
+);
+
+CREATE TABLE PARTICIPATED_IN
+(
+  Athlete_id INT NOT NULL,
+  Year INT NOT NULL,
+  Season VARCHAR(20) NOT NULL,
+  PRIMARY KEY (Athlete_id, Year, Season),
+  FOREIGN KEY (Athlete_id) REFERENCES ATHLETE(Athlete_id),
+  FOREIGN KEY (Year, Season) REFERENCES OLYMPIC(Year, Season)
+);
+
+
+
+
+
+
+insert into country values('UKR','UKRAIN');
+insert into country values('SRB','SERBIA');
+insert into country values('POL','POLAND');
+insert into country values('PRK','NORTH KOREA');
+insert into country values('THA','THAILAND');
+insert into country values('GEO','GEORGIA');
+insert into country values('TUR','TURKEY');
+insert into country values('ARM','ARMANIA');
+insert into country values('INA','INDONESIA');
+insert into country values('ROU','ROMANIA');
+insert into country values('VIE','VIETNAM');
+insert into country values('BAH','BAHAMAS');
+insert into country values('JOR','JORDAN');
+insert into country values('SIN','SINGAPORE');
+insert into country values('MAS','MALAYASIA');
+insert into country values('MEX','MEXICO');
+insert into country values('IRL','IRELAND');
+insert into country values('IND','INDIA');
+insert into country values('MGL','MANGOLIA');
+insert into country values('PHI','PHILIPPINSES');
+insert into country values('NOR','NORWAY');
+insert into country values('AUT','AUSTRIA');
+insert into country values('MAR','MOROCCO');
+insert into country values('NGR','NIGERIA');
+insert into country values('UAE','UNITED ARAB EMIRATE');
+insert into country values('BRA','BRAZIL');
+insert into country values('USA','UNITED STATES OF AMERICA');
+insert into country values('KOR','SOUTH KOREA');
+insert into country values('RUS','RUSSIA');
+insert into country values('GER','GERMANY');
+insert into country values('SUI','SWITZERLAND');
+insert into country values('CHN','CHINA');
+insert into country values('CAN','CANADA');
+
+
+
+
+
+insert into olympic values(2016,'Summer',TO_DATE('05/08/2016','dd/mm/yyyy'),
+TO_DATE('21/08/2016','dd/mm/yyyy'),'Rio de Janeiro','BRA');
+
+insert into olympic values(2016,'Winter',TO_DATE('12/02/2016','dd/mm/yyyy'),
+TO_DATE('21/02/2016','dd/mm/yyyy'),'NORWAY','NOR');
+
+
+insert into sport values(1,'Diving');
+insert into sport values(2,'Swimming');
+insert into sport values(3,'Synchronized swimming');
+insert into sport values(4,'Watetr polo');
+insert into sport values(5,'Archery');
+insert into sport values(6,'Atheletic');
+insert into sport values(7,'Badminton');
+insert into sport values(8,'Basketball');
+insert into sport values(9,'Boxing');
+insert into sport values(10,'Canoening');
+insert into sport values(11,'Cycling');
+insert into sport values(12,'Equestrian');
+insert into sport values(13,'Fencing');
+insert into sport values(14,'Field Hockey');
+insert into sport values(15,'Football');
+insert into sport values(16,'Golf');
+insert into sport values(17,'Gymanstics');
+insert into sport values(18,'Hand ball');
+insert into sport values(19,'Judo');
+insert into sport values(20,'Modern Penthlon');
+insert into sport values(21,'Rowing');
+insert into sport values(22,'Rugby sevens');
+insert into sport values(23,'Sailing');
+insert into sport values(24,'Shooting');
+insert into sport values(25,'Table Tennis');
+insert into sport values(26,'Taekwondo');
+insert into sport values(27,'Tennis');
+insert into sport values(28,'Tralthon');
+insert into sport values(29,'Volleyball');
+insert into sport values(30,'Weightlifting');
+insert into sport values(31,'Wrestling');
+insert into sport values(32,'Alpine Sking');
+insert into sport values(33,'Biathlon');
+insert into sport values(34,'Bobsleigh');
+insert into sport values(35,'Cross-country skiing');
+insert into sport values(36,' Curling');
+insert into sport values(37,'Figure skating');
+insert into sport values(38,'Freestyle skiing');
+insert into sport values(39,'Ice hockey');
+insert into sport values(40,'Luge');
+insert into sport values(41,'Nordic combined');
+insert into sport values(42,'Short track speed skating');
+insert into sport values(43,'Skeleton');
+insert into sport values(44,'Ski jumping');
+insert into sport values(45,'Snowboarding');
+insert into sport values(46,'Speed skating');
+
+
+
+
+
+
+
+
+
+insert into discipline values('Parallel bars','Individual','Men',17);
+insert into discipline values('C-1 200m','Individual','Men',10);
+insert into discipline values('10m air rifle','Individual','Men',24);
+insert into discipline values('Sabre','Team','Women',13);
+insert into discipline values('Greco Roman 85 kg','Individual','Men',31);
+insert into discipline values('High jump','Individual','Men',6);
+insert into discipline values('Double sculls','Team','Women',21);
+insert into discipline values('Discuss throw','Team','Men',6);
+insert into discipline values('Women 63 kg','Individual','Women',31);
+insert into discipline values('Hammer throw','Individual','Men',6);
+insert into discipline values('Women 75 kg','Individual','Women',30);
+insert into discipline values('Men vault','Individual','Men',17);
+insert into discipline values('Men 56 kg','Individual','Men',30);
+insert into discipline values('Men 50 m pistol','Individual','Men',24);
+insert into discipline values('Women 48 kg','Individual','Women',30);
+insert into discipline values('Women 58 kg','Individual','Women',30);
+insert into discipline values('Women 49 kg','Individual','Women',26);
+insert into discipline values('Men 105 kg','Individual','Men',30);
+insert into discipline values('Men 90 kg','Individual','Men',19);
+insert into discipline values('Men freestyle 125 kg','Individual','Men',31);
+insert into discipline values('Men greco-roman 130 kg','Individual','Men',31);
+insert into discipline values('Men greco-roman 98 kg','Individual','Men',31);
+insert into discipline values('Women 67 kg','Individual','Women',26);
+insert into discipline values('Men greco-roman 65 kg','Individual','Men',31);
+insert into discipline values('Mixed doubles','Team','Mixed',7);
+insert into discipline values('Men 62 kg','Individual','Men',31);
+insert into discipline values('Women team epee','Team','Women',13);
+insert into discipline values('Men doubles','Team','Men',27);
+insert into discipline values('Men freestyle 97 kg','Individual','Men',31);
+insert into discipline values('Men 10m air pistol','Individual','Men',24);
+insert into discipline values('Men 50m pistol','Individual','Men',24);
+insert into discipline values('Men 68 kg','Individual','Men',26);
+insert into discipline values('men 100m butterfly','Individual','Men',2);
+insert into discipline values('Women 10m synchonized platform','Team','Women',1);
+insert into discipline values('Men singles','Individual','Men',7);
+insert into discipline values('Men keirin','Individual','Men',11);
+insert into discipline values('Women laser radial','Individual','Women',23);
+insert into discipline values('Women singles','Individual','Women',7);
+insert into discipline values('Women freestyle 58kg','Individual','Women',31);
+insert into discipline values('Women 57kg','Individual','Women',19);
+insert into discipline values('Men lightweight','Individual','Men',9);
+insert into discipline values('Women 53kg','Individual','Women',30);
+insert into discipline values('Men double sculls','Team','Men',21);
+insert into discipline values('Women tournament','Team','Women',18);
+insert into discipline values('Nacra 17','Team','Mixed doubles',23);
+insert into discipline values('Men welterweight','Individual','Men',9);
+insert into discipline values('Men 81kg','Individual','Men',19);
+insert into discipline values('Men event','Individual','Men',20);
+insert into discipline values('Super-G','Individual','Men',32);
+insert into discipline values(   'Combined','Individual','Men',32  );
+insert into discipline values( 'Halfpipe','Individual','Men',38    );
+insert into discipline values(  'Halfpipe','Individual','Women',45   );
+insert into discipline values(   'Ice dancing','Team','Women',37  );
+insert into discipline values(   'Cross country','Team','Men',35  );
+insert into discipline values(   'Girls 500mt','Individual','Women',46  );
+insert into discipline values(  'Girls 1000mt','Individual','Women',42   );
+insert into discipline values( 'Boys 500mt','Individual','Men',46    );
+insert into discipline values( 'Pair','Team','Women',37    );
+insert into discipline values(   'Girls Singles','Individual','Women',37  );
+insert into discipline values(  'Pursuit','Individual','Men',33   );
+insert into discipline values(  'Boys 10km','Individual','Men',35   );
+insert into discipline values(  'Sprint','Individual','Men',33   );
+insert into discipline values(  'Sprint','Individual','Women',33   );
+insert into discipline values( 'Normal hill 5km','Individual','Men',41    );
+insert into discipline values(  'Boys singles','Individual','Men',41   );
+insert into discipline values( '1500mt','Individual','Women',46    );
+insert into discipline values( 'Girls 5km','Individual','Women',35    );
+insert into discipline values( 'Girls mass start','Individual','Women',46    );
+
+insert into discipline values('Slopestyle','Individual','Men',38);
+insert into discipline values('Pursuit','Individual','Women',33);
+
+insert into discipline values('Mens floor','Individual','Men',17);
+insert into discipline values('Womens 78kg','Individual','Women',19);
+
+insert into discipline values('Women 100 mt freeStyle','Individual','Women',2);
+
+
+
+
+
+
+
+
+
+insert into athlete values(201,'Oleh','Vernyayev','M','UKR',17);
+insert into athlete values(202,'yuriy','cheban','M','UKR',10);
+insert into athlete values(203,'serhiy','kulish','M','UKR',24);
+insert into athlete values(204,'olha','kharlam','F','UKR',13);
+insert into athlete values(205,'Alina','Komashchuk','F','UKR',13);
+insert into athlete values(206,'olena','krvatska','F','UKR',13);
+insert into athlete values(207,'olena','voronina','F','UKR',13);
+insert into athlete values(208,'zhan','blen','M','UKR',31);
+insert into athlete values(209,'Bohdal','Bondareko','M','UKR',6);
+insert into athlete values(210,'Magdelan','Fularczer','F','POL',21);
+insert into athlete values(211,'Ntelia','madaz','F','POL',21);
+insert into athlete values(212,'piotr','malachowskal','M','POL',6);
+insert into athlete values(213,'Monika','michalik','F','POL',31);
+insert into athlete values(214,'wojciech','nodvicki','M','POL',6);
+insert into athlete values(215,'Rim jong','sim','F','PRK',30);
+insert into athlete values(216,'Ri','Shewang','M','PRK',17);
+insert into athlete values(217,'Om','Yun chol','M','PRK',30);
+insert into athlete values(218,'Kim','Ysong guk','M','PRK',24);
+insert into athlete values(219,'Sopita','Tansan','F','THA',30);
+insert into athlete values(220,'primisiri','Sirikae','F','THA',30);
+insert into athlete values(221,'panipak','wongpattam','F','THA',26);
+insert into athlete values(222,'lasha','talkhadze','M','GEO',30);
+insert into athlete values(223,'Vrlam','lipertenlia','M','GEO',19);
+insert into athlete values(224,'geno','petrisalvi','M','GEO',31);
+insert into athlete values(225,'Taha','Akgul','M','TUR',31);
+insert into athlete values(226,'riza','kayalp','M','TUR',31);
+insert into athlete values(227,'cenk','lidem','M','TUR',31);
+insert into athlete values(228,'Nur','tatar','F','TUR',26);
+insert into athlete values(229,'artur','alkeshyan','M','ARM',31);
+insert into athlete values(230,'migran','artunanm','M','ARM',31);
+insert into athlete values(231,'tontovi','ahmad','M','INA',7);
+insert into athlete values(232,'lilyana','natsir','F','INA',7);
+insert into athlete values(233,'eko','yukli','M','ARM',30);
+insert into athlete values(234,'Ana','Maria','F','ROU',13);
+insert into athlete values(235,'loredana','dinu','F','ROU',13);
+insert into athlete values(236,'simona','gherman','F','ROU',13);
+insert into athlete values(237,'simona','pop','F','ROU',13);
+insert into athlete values(238,'Horia','techu','M','ROU',27);
+insert into athlete values(239,'flrin','mergea','M','ROU',27);
+insert into athlete values(240,'albert','sarito','M','ROU',31);
+insert into athlete values(241,'hoang','xuan vinh','M','VIE',24);
+insert into athlete values(242,'amhad','Abu-ghaush','M','JOR',26);
+insert into athlete values(243,'joseph','schooling','M','SIN',2);
+insert into athlete values(244,'cheong','jun hoong','F','MAS',1);
+insert into athlete values(245,'pandelela','riong','F','MAS',1);
+insert into athlete values(246,'lee','chong','M','MAS',7);
+insert into athlete values(247,'azizulhasni','awang','M','MAS',11);
+insert into athlete values(248,'analise','Murphy','F','IRL',23);
+insert into athlete values(249,'P.V.','Sindhu','F','IND',7);
+insert into athlete values(250,'Sakshi','Malik','F','IND',31);
+insert into athlete values(251,'dorsurendim','sumiyan','F','MGL',19);
+insert into athlete values(252,'duruymbguugiim','otgondalai','M','MGL',9);
+insert into athlete values(253,'hidilyn','diaz','F','PHI',30);
+insert into athlete values(254,'kjeti','borch','M','NOR',21);
+insert into athlete values(255,'olaf','tufle','M','NOR',21);
+insert into athlete values(256,'ida','alstad','F','NOR',18);
+insert into athlete values(257,'camilla','herren','F','NOR',18);
+insert into athlete values(258,'mari','molid','F','NOR',18);
+insert into athlete values(259,'sanna','solberg','F','NOR',18);
+insert into athlete values(260,'veronica','kristiana','F','NOR',18);
+insert into athlete values(261,'thomas','zajac','M','AUT',23);
+insert into athlete values(262,'Tanja','Frank','F','AUT',23);
+insert into athlete values(263,'mohammad','rabbi','M','MAR',9);
+insert into athlete values(264,'sergui','toma','M','UAE',19);
+insert into athlete values(265,'ismael','hernaledz','M','MEX',20);
+
+insert into athlete values(266,'River ','Radmus','M','USA',32);
+insert into athlete values(267,'Birk ','Irving','M','USA',38);
+insert into athlete values(268,'Chloe  ','Kim','F','USA',45);
+insert into athlete values(269,'Nikolas  ','Baden','M','USA',45);
+insert into athlete values(270,'Paula  ','Cooper','F','USA',38);
+insert into athlete values(271,'Chloe  ','lewis','F','USA',37);
+insert into athlete values(272,'Logan   ','bye','F','USA',37);
+
+insert into athlete values(273,'Kim','magnus','M','KOR',35);
+insert into athlete values(274,'Kim ','Min','M','KOR',46);
+insert into athlete values(275,'Kim','ji-yoo','F','KOR',42);
+insert into athlete values(276,' Lee ','Suu-yuon','F','KOR',42);
+insert into athlete values(277,'Chung  ','Baden','M','KOR',46);
+
+insert into athlete values(278,'Ekatarine','Borisova','F','RUS',37);
+insert into athlete values(279,'Dimitry','Sopot','F','RUS',37);
+insert into athlete values(280,'Pollina','Tursruskaya','F','RUS',37);
+insert into athlete values(281,'Egor','Tutmin','M','RUS',33);
+insert into athlete values(282,'Igor','Fidotov','M','RUS',35);
+
+insert into athlete values(283,'Juliane','Fruiweit','F','GER',33);
+insert into athlete values(284,'Tim','Kop','M','GER',41);
+insert into athlete values(285,'Paul','Lucas','M','GER',41);
+insert into athlete values(286,'Jessci','Teible','F','GER',41);
+insert into athlete values(287,'Anna ','Seiel','F','GER',42);
+
+
+
+insert into athlete values(288,'Han ','mei','F','CHN',46);
+insert into athlete values(289,'Maa ','wei','M','CHN',42);
+insert into athlete values(290,'Hann','mei','M','CHN',46);
+insert into athlete values(291,'Chi ','Chunnex','F','CHN',35);
+insert into athlete values(292,'Han ','Mei','M','CHN',46);
+
+insert into athlete values(293,'Siveret','Bakken','M','NOR',33);
+insert into athlete values(294,'Thomas','Larsen','M','NOR',35);
+insert into athlete values(295,'Birk','Rudd','M','NOR',38);
+insert into athlete values(296,'Siveret','Bakken','M','NOR',33);
+insert into athlete values(297,'Marthe','Jhonsan','F','NOR',33);
+insert into athlete values(298,'Marthe','Jhonsan','F','NOR',33);
+insert into athlete values(299,'Trym','Andreson','M','NOR',38);
+insert into athlete values(300,'Vebron','Hegdal','M','NOR',35);
+
+
+
+
+insert into athlete values(301,'Raifla','Silva','F','BRA',19);
+insert into athlete values(302,'Robenso','Caseico','M','BRA',9);
+insert into athlete values(303,'Fleipe','Wu','M','BRA',24);
+insert into athlete values(304,'Deigo','Hypilito','M','BRA',17);
+insert into athlete values(305,'Maiyra','Aguira','F','BRA',19);
+insert into athlete values(306,'Arthura','Marino','M','NOR',17);
+
+
+
+
+
+insert into athlete values(307,'Simon','Manuel','F','USA',2);
+insert into athlete values(308,'Penny','Oleiska','F','CAN',2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+insert into result values(201,2016,'Summer','Parallel bars','Individual','Men','Gold');
+insert into result values(202,2016,'Summer','C-1 200m','Individual','Men','Gold');
+insert into result values(203,2016,'Summer','10m air rifle','Individual','Men','Silver');
+insert into result values(204,2016,'Summer','Sabre','Team','Women','Silver');
+insert into result values(205,2016,'Summer','Sabre','Team','Women','Silver');
+insert into result values(206,2016,'Summer','Sabre','Team','Women','Silver');
+insert into result values(207,2016,'Summer','Sabre','Team','Women','Silver');
+insert into result values(208,2016,'Summer','Greco Roman 85 kg','Individual','Men','Silver');
+insert into result values(209,2016,'Summer','High jump','Individual','Men','Bronze');
+insert into result values(210,2016,'Summer','Double sculls','Team','Women','Gold');
+insert into result values(211,2016,'Summer','Double sculls','Team','Women','Gold');
+insert into result values(212,2016,'Summer','Discuss throw','Team','Men','Silver');
+insert into result values(213,2016,'Summer','Women 63 kg','Individual','Women','bronze');
+insert into result values(214,2016,'Summer','Hammer throw','Individual','Men','bronze');
+insert into result values(215,2016,'Summer','Women 75 kg','Individual','Women','Gold');
+insert into result values(216,2016,'Summer','Men vault','Individual','Men','Gold');
+insert into result values(217,2016,'Summer','Men 56 kg','Individual','Men','Silver');
+insert into result values(218,2016,'Summer','Men 50 m pistol','Individual','Men','bronze');
+insert into result values(219,2016,'Summer','Women 48 kg','Individual','Women','Gold');
+insert into result values(220,2016,'Summer','Women 58 kg','Individual','Women','Silver');
+insert into result values(221,2016,'Summer','Women 49 kg','Individual','Women','Bronze');
+insert into result values(222,2016,'Summer','Men 105 kg','Individual','Men','Gold');
+insert into result values(223,2016,'Summer','Men 90 kg','Individual','Men','Silver');
+insert into result values(224,2016,'Summer','Men freestyle 125 kg','Individual','Men','Bronze');
+insert into result values(225,2016,'Summer','Men freestyle 125 kg','Individual','Men','Gold');
+insert into result values(226,2016,'Summer','Men greco-roman 130 kg','Individual','Men','Silver');
+insert into result values(227,2016,'Summer','Men greco-roman 98 kg','Individual','Men','Bronze');
+insert into result values(228,2016,'Summer','Women 67 kg','Individual','Women','Bronze');
+insert into result values(229,2016,'Summer','Men greco-roman 98 kg','Individual','Men','Gold');
+insert into result values(230,2016,'Summer','Men greco-roman 65 kg','Individual','Men','Silver');
+insert into result values(231,2016,'Summer','Mixed doubles','Team','Mixed','Gold');
+insert into result values(232,2016,'Summer','Mixed doubles','Team','Mixed','Gold');
+insert into result values(233,2016,'Summer','Men 62 kg','Individual','Men','Silver');
+insert into result values(234,2016,'Summer','Women team epee','Team','Women','Gold');
+insert into result values(235,2016,'Summer','Women team epee','Team','Women','Gold');
+insert into result values(236,2016,'Summer','Women team epee','Team','Women','Gold');
+insert into result values(237,2016,'Summer','Women team epee','Team','Women','Gold');
+insert into result values(238,2016,'Summer','Men doubles','Team','Men','Silver');
+insert into result values(239,2016,'Summer','Men doubles','Team','Men','Silver');
+insert into result values(240,2016,'Summer','Men freestyle 97 kg','Individual','Men','Bronze');
+insert into result values(241,2016,'Summer','Men 10m air pistol','Individual','Men','Gold');
+insert into result values(241,2016,'Summer','Men 50m pistol','Individual','Men','Silver');
+insert into result values(242,2016,'Summer','Men 68 kg','Individual','Men','Gold');
+insert into result values(243,2016,'Summer','men 100m butterfly','Individual','Men','Gold');
+insert into result values(244,2016,'Summer','Women 10m synchonized platform','Team','Women','Silver');
+insert into result values(245,2016,'Summer','Women 10m synchonized platform','Team','Women','Silver');
+insert into result values(246,2016,'Summer','Men singles','Individual','Men','Silver');
+insert into result values(247,2016,'Summer','Men keirin','Individual','Men','Bronze');
+insert into result values(248,2016,'Summer','Women laser radial','Individual','Women','Silver');
+insert into result values(249,2016,'Summer','Women singles','Individual','Women','Silver');
+insert into result values(250,2016,'Summer','Women freestyle 58kg','Individual','Women','Bronze');
+insert into result values(251,2016,'Summer','Women 57kg','Individual','Women','Silver');
+insert into result values(252,2016,'Summer','Men lightweight','Individual','Men','Bronze');
+insert into result values(253,2016,'Summer','Women 53kg','Individual','Women','Silver');
+insert into result values(254,2016,'Summer','Men double sculls','Team','Men','Bronze');
+insert into result values(255,2016,'Summer','Men double sculls','Team','Men','Bronze');
+insert into result values(256,2016,'Summer','Women tournament','Team','Women','Bronze');
+insert into result values(257,2016,'Summer','Women tournament','Team','Women','Bronze');
+insert into result values(258,2016,'Summer','Women tournament','Team','Women','Bronze');
+insert into result values(259,2016,'Summer','Women tournament','Team','Women','Bronze');
+insert into result values(260,2016,'Summer','Women tournament','Team','Women','Bronze');
+insert into result values(261,2016,'Summer','Nacra 17','Team','Mixed doubles','Bronze');
+insert into result values(262,2016,'Summer','Nacra 17','Team','Mixed doubles','Bronze');
+insert into result values(263,2016,'Summer','Men welterweight','Individual','Men','Bronze');
+insert into result values(264,2016,'Summer','Men 81kg','Individual','Men','Bronze');
+insert into result values(265,2016,'Summer','Men event','Individual','Men','Bronze');
+insert into result values(266,2016,'Winter','Super-G','Individual','Men','Gold');
+insert into result values(266,2016,'Winter','Combined','Individual','Men','Gold');
+insert into result values(267,2016,'Winter','Halfpipe','Individual','Men','Gold');
+insert into result values(268,2016,'Winter','Halfpipe','Individual','Women','Gold');
+insert into result values(269,2016,'Winter','Halfpipe','Individual','Men','Silver');
+insert into result values(270,2016,'Winter','Halfpipe','Individual','Women','Silver');
+insert into result values(271,2016,'Winter','Ice dancing','Team','Women','Silver');
+insert into result values(272,2016,'Winter','Ice dancing','Team','Women','Silver');
+
+insert into result values(273,2016,'Winter','Cross country','Team','Men','Gold');
+insert into result values(274,2016,'Winter','Girls 500mt','Individual','Women','Gold');
+insert into result values(275,2016,'Winter','Girls 1000mt','Individual','Women','Gold');
+insert into result values(276,2016,'Winter','Girls 1000mt','Individual','Women','Silver');
+insert into result values(277,2016,'Winter','Boys 500mt','Individual','Men','Bronze');
+
+
+insert into result values(278,2016,'Winter','Pair','Team','Women','Gold');
+insert into result values(279,2016,'Winter','Pair','Team','Women','Gold');
+insert into result values(280,2016,'Winter','Girls Singles','Individual','Women','Gold');
+insert into result values(281,2016,'Winter','Pursuit','Individual','Men','Silver');
+insert into result values(281,2016,'Winter','Sprint','Individual','Men','Bronze');
+insert into result values(282,2016,'Winter','Boys 10km','Individual','Men','Bronze');
+
+
+insert into result values(283,2016,'Winter','Sprint','Individual','Women','Gold');
+insert into result values(284,2016,'Winter','Normal hill 5km','Individual','Men','Gold');
+insert into result values(285,2016,'Winter','Boys singles','Individual','Men','Silver');
+insert into result values(286,2016,'Winter','Girls Singles','Individual','Women','Silver');
+insert into result values(287,2016,'Winter','Girls 1000mt','Individual','Women','Bronze');
+
+insert into result values(288,2016,'Winter','Girls 500mt','Individual','Women','Silver');
+insert into result values(289,2016,'Winter','Girls 1000mt','Individual','Women','Silver');
+insert into result values(290,2016,'Winter','1500mt','Individual','Women','Silver');
+insert into result values(291,2016,'Winter','Girls 5km','Individual','Women','Silver');
+insert into result values(292,2016,'Winter','Girls mass start','Individual','Women','Silver');
+insert into result values(293,2016,'Winter','Pursuit','Individual','Men','Gold');
+insert into result values(294,2016,'Winter','Sprint','Individual','Men','Gold');
+insert into result values(295,2016,'Winter','Slopestyle','Individual','Men','Gold');
+insert into result values(296,2016,'Winter','Sprint','Individual','Men','Silver');
+insert into result values(297,2016,'Winter','Sprint','Individual','Women','Silver');
+insert into result values(298,2016,'Winter','Pursuit','Individual','Women','Silver');
+insert into result values(299,2016,'Winter','Halfpipe','Individual','Men','Bronze');
+insert into result values(300,2016,'Winter','Sprint','Individual','Men','Bronze');
+
+
+
+
+
+insert into result values(301,2016,'Summer','Women 57kg','Individual','Women','Gold');
+insert into result values(302,2016,'Summer','Men lightweight','Individual','Men','Gold');
+insert into result values(303,2016,'Summer','Men 10m air pistol','Individual','Men','Silver');
+insert into result values(304,2016,'Summer','Mens floor','Individual','Men','Silver');
+insert into result values(305,2016,'Summer','Womens 78kg','Individual','Women','Bronze');
+insert into result values(306,2016,'Summer','Mens floor','Individual','Men','Bronze');
+
+insert into result values(307,2016,'Summer','Women 100 mt freeStyle','Individual','Women','Gold');
+insert into result values(308,2016,'Summer','Women 100 mt freeStyle','Individual','Women','Gold');
+
+
+
+
+
+
+
+
+
+insert into participated_in values(201,2016,'Summer');
+insert into participated_in values(202,2016,'Summer');
+insert into participated_in values(203,2016,'Summer');
+insert into participated_in values(204,2016,'Summer');
+insert into participated_in values(205,2016,'Summer');
+insert into participated_in values(206,2016,'Summer');
+insert into participated_in values(207,2016,'Summer');
+insert into participated_in values(208,2016,'Summer');
+insert into participated_in values(209,2016,'Summer');
+insert into participated_in values(210,2016,'Summer');
+insert into participated_in values(211,2016,'Summer');
+insert into participated_in values(212,2016,'Summer');
+insert into participated_in values(213,2016,'Summer');
+insert into participated_in values(214,2016,'Summer');
+insert into participated_in values(215,2016,'Summer');
+insert into participated_in values(216,2016,'Summer');
+insert into participated_in values(217,2016,'Summer');
+insert into participated_in values(218,2016,'Summer');
+insert into participated_in values(219,2016,'Summer');
+insert into participated_in values(220,2016,'Summer');
+insert into participated_in values(221,2016,'Summer');
+insert into participated_in values(222,2016,'Summer');
+insert into participated_in values(223,2016,'Summer');
+insert into participated_in values(224,2016,'Summer');
+insert into participated_in values(225,2016,'Summer');
+insert into participated_in values(226,2016,'Summer');
+insert into participated_in values(227,2016,'Summer');
+insert into participated_in values(228,2016,'Summer');
+insert into participated_in values(229,2016,'Summer');
+insert into participated_in values(230,2016,'Summer');
+insert into participated_in values(231,2016,'Summer');
+insert into participated_in values(232,2016,'Summer');
+insert into participated_in values(233,2016,'Summer');
+insert into participated_in values(234,2016,'Summer');
+insert into participated_in values(235,2016,'Summer');
+insert into participated_in values(236,2016,'Summer');
+insert into participated_in values(237,2016,'Summer');
+insert into participated_in values(238,2016,'Summer');
+insert into participated_in values(239,2016,'Summer');
+insert into participated_in values(240,2016,'Summer');
+insert into participated_in values(241,2016,'Summer');
+insert into participated_in values(242,2016,'Summer');
+insert into participated_in values(243,2016,'Summer');
+insert into participated_in values(244,2016,'Summer');
+insert into participated_in values(245,2016,'Summer');
+insert into participated_in values(246,2016,'Summer');
+insert into participated_in values(247,2016,'Summer');
+insert into participated_in values(248,2016,'Summer');
+insert into participated_in values(249,2016,'Summer');
+insert into participated_in values(250,2016,'Summer');
+insert into participated_in values(251,2016,'Summer');
+insert into participated_in values(252,2016,'Summer');
+insert into participated_in values(253,2016,'Summer');
+insert into participated_in values(254,2016,'Summer');
+insert into participated_in values(255,2016,'Summer');
+insert into participated_in values(256,2016,'Summer');
+insert into participated_in values(257,2016,'Summer');
+insert into participated_in values(258,2016,'Summer');
+insert into participated_in values(259,2016,'Summer');
+insert into participated_in values(260,2016,'Summer');
+insert into participated_in values(261,2016,'Summer');
+insert into participated_in values(262,2016,'Summer');
+insert into participated_in values(263,2016,'Summer');
+insert into participated_in values(264,2016,'Summer');
+insert into participated_in values(265,2016,'Summer');
+insert into participated_in values(266,2016,'Winter');
+insert into participated_in values(267,2016,'Winter');
+insert into participated_in values(268,2016,'Winter');
+insert into participated_in values(269,2016,'Winter');
+insert into participated_in values(270,2016,'Winter');
+insert into participated_in values(271,2016,'Winter');
+insert into participated_in values(272,2016,'Winter');
+insert into participated_in values(273,2016,'Winter');
+insert into participated_in values(274,2016,'Winter');
+insert into participated_in values(275,2016,'Winter');
+insert into participated_in values(276,2016,'Winter');
+insert into participated_in values(277,2016,'Winter');
+insert into participated_in values(278,2016,'Winter');
+insert into participated_in values(279,2016,'Winter');
+insert into participated_in values(280,2016,'Winter');
+insert into participated_in values(281,2016,'Winter');
+insert into participated_in values(282,2016,'Winter');
+insert into participated_in values(283,2016,'Winter');
+insert into participated_in values(284,2016,'Winter');
+insert into participated_in values(285,2016,'Winter');
+insert into participated_in values(286,2016,'Winter');
+insert into participated_in values(287,2016,'Winter');
+insert into participated_in values(288,2016,'Winter');
+insert into participated_in values(289,2016,'Winter');
+insert into participated_in values(290,2016,'Winter');
+insert into participated_in values(291,2016,'Winter');
+insert into participated_in values(292,2016,'Winter');
+
+insert into participated_in values(293,2016,'Winter');
+insert into participated_in values(294,2016,'Winter');
+insert into participated_in values(295,2016,'Winter');
+insert into participated_in values(296,2016,'Winter');
+insert into participated_in values(297,2016,'Winter');
+insert into participated_in values(298,2016,'Winter');
+insert into participated_in values(299,2016,'Winter');
+insert into participated_in values(300,2016,'Winter');
+insert into participated_in values(301,2016,'Summer');
+insert into participated_in values(302,2016,'Summer');
+insert into participated_in values(303,2016,'Summer');
+insert into participated_in values(304,2016,'Summer');
+insert into participated_in values(305,2016,'Summer');
+insert into participated_in values(306,2016,'Summer');
+insert into participated_in values(307,2016,'Summer');
+insert into participated_in values(308,2016,'Summer');
+
+
+
+
+insert into consist_of values(2016,'Summer',1);
+insert into consist_of values(2016,'Summer',2);
+insert into consist_of values(2016,'Summer',3);
+insert into consist_of values(2016,'Summer',4);
+insert into consist_of values(2016,'Summer',5);
+insert into consist_of values(2016,'Summer',6);
+insert into consist_of values(2016,'Summer',7);
+insert into consist_of values(2016,'Summer',8);
+insert into consist_of values(2016,'Summer',9);
+insert into consist_of values(2016,'Summer',10);
+insert into consist_of values(2016,'Summer',11);
+insert into consist_of values(2016,'Summer',12);
+insert into consist_of values(2016,'Summer',13);
+insert into consist_of values(2016,'Summer',14);
+insert into consist_of values(2016,'Summer',15);
+insert into consist_of values(2016,'Summer',16);
+insert into consist_of values(2016,'Summer',17);
+insert into consist_of values(2016,'Summer',18);
+insert into consist_of values(2016,'Summer',19);
+insert into consist_of values(2016,'Summer',20);
+insert into consist_of values(2016,'Summer',21);
+insert into consist_of values(2016,'Summer',22);
+insert into consist_of values(2016,'Summer',23);
+insert into consist_of values(2016,'Summer',24);
+insert into consist_of values(2016,'Summer',25);
+insert into consist_of values(2016,'Summer',26);
+insert into consist_of values(2016,'Summer',27);
+insert into consist_of values(2016,'Summer',28);
+insert into consist_of values(2016,'Summer',29);
+insert into consist_of values(2016,'Summer',30);
+insert into consist_of values(2016,'Summer',31);
+insert into consist_of values(2016,'Winter',32);
+insert into consist_of values(2016,'Winter',33);
+insert into consist_of values(2016,'Winter',34);
+insert into consist_of values(2016,'Winter',35);
+insert into consist_of values(2016,'Winter',36);
+insert into consist_of values(2016,'Winter',37);
+insert into consist_of values(2016,'Winter',38);
+insert into consist_of values(2016,'Winter',39);
+insert into consist_of values(2016,'Winter',40);
+insert into consist_of values(2016,'Winter',41);
+insert into consist_of values(2016,'Winter',42);
+insert into consist_of values(2016,'Winter',43);
+insert into consist_of values(2016,'Winter',44);
+insert into consist_of values(2016,'Winter',45);
+insert into consist_of values(2016,'Winter',46);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

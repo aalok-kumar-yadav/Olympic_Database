@@ -1,0 +1,71 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<unistd.h>
+#include "sqlca.h"
+
+
+int main(){
+EXEC SQL BEGIN DECLARE SECTION;
+char season[50],dname[50],ty[50],k[50],md[50];
+int yr;
+char f_name[20],l_name[20];
+char gen[20];
+char con_abbrev[20];
+int ath_id,spo_id;
+bool flag;
+bool flag2;
+bool flag3;
+char arr[5];
+bool b =false;
+char qr[200];
+const char* target ="201551012@10.100.1.62:5432";
+const char* usr="201551012";
+const  char* password="201551012";
+
+EXEC SQL END DECLARE SECTION;
+
+
+EXEC SQL CONNECT TO :target USER :usr IDENTIFIED BY "201551012";
+EXEC SQL set search_path to olympic;
+printf("For insertion in result\n");
+printf("Enter gender\n");
+scanf("%s",&gen);
+printf("Enter Country_abbrev\n");
+scanf("%s",&con_abbrev);
+
+				EXEC SQL DECLARE cr1 CURSOR FOR select * from athlete_info(:gen, :con_abbrev);
+				EXEC SQL OPEN cr1;
+				while (sqlca.sqlcode==0) {
+				EXEC SQL FETCH cr1 INTO :ath_id, :f_name, :l_name, :gen, :con_abbrev, :spo_id;
+                                printf("%5d   %10s          %10s        %10s        %10s        %5d\n",ath_id, f_name, l_name, gen,   					con_abbrev, spo_id);
+				}
+
+
+
+printf("Enter athlete_id\n");
+scanf("%d",&ath_id);
+printf("Enter year\n");
+scanf("%d",&yr);
+printf("Enter season\n");
+scanf("%s",&season);
+printf("Enter discipline type\n");
+scanf("%s",&ty);
+printf("Enter discipline kind\n");
+scanf("%s",&k);
+printf("Enter medal achieved\n");
+scanf("%s",&md);
+printf("Enter discipline name for sport\n");
+scanf("%s",&dname);
+
+	EXEC SQL select valid_insert INTO :flag FROM valid_insert(:ath_id, :yr, :season, :dname, :ty, :k, :md);
+	if (flag==true){
+printf("row inserted sucessfully\n");
+}
+else
+{
+printf("can not  perform this operation\n");
+}
+				
+return 1;
+}
