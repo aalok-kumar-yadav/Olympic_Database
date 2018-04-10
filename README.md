@@ -1,11 +1,13 @@
-# Olympic_Database
+## Olympic_Database
+
+## Description 
 
 Our database will contain country name,country id,first and last name of player,
 his/her date of birth,gender,category of sports,in which year the olypic games
 was organised,various events ,medals and many more.
 
 
-# RDMS Tables
+## RDMS Tables
 
 - Athelete
 - Country
@@ -15,11 +17,12 @@ was organised,various events ,medals and many more.
 - Olympic
 
 
-# SQL Query
+## SQL Query
 
 Some sample sql queries
 
 List all the country whose athlete participated in more than 4 sports
+
 
 ```bash
 select country_name,Total_sports from (select country_name,count(sport_id) as Total_sports
